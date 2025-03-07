@@ -22,7 +22,7 @@ void simulateDataReception() {
     endIndex = simulatedData.indexOf('\n', startIndex);  // Find the next newline
   }
   // Parse the last line if it doesn't end with a newline
-  if (startIndex < simulatedData.length()) {
+  if (startIndex < static_cast<int>(simulatedData.length())) {
     String line = simulatedData.substring(startIndex);
     Serial.println("Parsing last line: " + line);
     parseDetection(line);
@@ -32,7 +32,7 @@ void simulateDataReception() {
 // Example function to demonstrate getting the highest priority target
 void demonstrateHighestPriorityTarget() {
   // Get the highest priority target
-  Target highestPriorityTarget = getHighestPriorityTarget();
+  Target highestPriorityTarget = getHighestPriorityTarget(25);
   
   // Print the highest priority target information
   Serial.println("Highest Priority Target:");
@@ -43,7 +43,7 @@ void demonstrateHighestPriorityTarget() {
   Serial.println("--------------------");
 }
 
-void setup() {
+void receiverSetup() {
   // Initialize Serial Monitor for debugging output
   Serial.begin(115200);  // Set baud rate to 115200
   
@@ -69,7 +69,7 @@ void setup() {
   demonstrateHighestPriorityTarget();
 }
 
-void loop() {
+void receiverLoop() {
   // The loop function is empty because all the work is done in the onDataReceive callback
   // This function is called automatically whenever data is received via ESP-NOW
 }
