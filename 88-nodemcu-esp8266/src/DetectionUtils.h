@@ -1,8 +1,9 @@
-#ifndef DETECTION_UTILS_H
-#define DETECTION_UTILS_H
+#ifndef DETECTIONUTILS_H
+#define DETECTIONUTILS_H
 
 #include <Arduino.h>
 #include <vector>
+#include <String>
 
 // Define a structure to hold information about detected objects (faces or persons)
 struct DetectedObject {
@@ -22,11 +23,11 @@ struct Target {
 };
 
 // Function declarations
-Target getHighestPriorityTarget(int scoreThreshold = 25);
-void parseDetection(const String& data);
+Target getHighestPriorityTarget(int scoreThreshold);
+void parseDetection(const String& line);
 
 // Global vectors to store detected faces and persons
 extern std::vector<DetectedObject> detectedFaces;
 extern std::vector<DetectedObject> detectedPersons;
 
-#endif // DETECTION_UTILS_H
+#endif // DETECTIONUTILS_H
