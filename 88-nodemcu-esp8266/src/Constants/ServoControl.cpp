@@ -117,3 +117,27 @@ void actionGroove(int grooves, int amplitude)
         delay(100);
     }
 }
+
+void headSetup()
+{
+    upperNeckServo.attach(D7, 750, 1300);
+    lowerNeckServo.attach(D8, 820, 1400);
+}
+
+void headUp()
+{
+    lowerNeckServo.write(180);
+    upperNeckServo.write(180);
+}
+
+void headDown()
+{
+    lowerNeckServo.write(0);
+    upperNeckServo.write(0);
+}
+
+void headCenter()
+{
+    lowerNeckServo.write(90);
+    upperNeckServo.write(90);
+}
