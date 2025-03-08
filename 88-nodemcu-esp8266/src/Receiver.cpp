@@ -1,7 +1,10 @@
+#include "Receiver.h"
+
 // Include necessary libraries
 #include <ESP8266WiFi.h> // Enables WiFi functionality for ESP8266
 #include <espnow.h>      // Enables ESP-NOW protocol for communication
 #include <vector>        // Allows use of dynamic arrays (vectors)
+#include <Arduino.h>
 
 // Define a structure to hold information about detected objects (faces or persons)
 struct DetectedObject
@@ -174,7 +177,7 @@ void onDataReceive(uint8_t *mac, uint8_t *data, uint8_t len)
   }
 
   // Get the highest priority target
-  Target highestPriorityTarget = getHighestPriorityTarget();
+  Target highestPriorityTarget = getHighestPriorityTarget(25);
 
   // Print the highest priority target information
   Serial.println("Highest Priority Target:");
@@ -185,7 +188,7 @@ void onDataReceive(uint8_t *mac, uint8_t *data, uint8_t len)
   Serial.println("--------------------");
 }
 
-void setup()
+void receiverSetup()
 {
   // Initialize Serial Monitor for debugging output
   Serial.begin(115200); // Set baud rate to 115200
@@ -205,10 +208,4 @@ void setup()
 
   // Register callback function to be called when data is received
   esp_now_register_recv_cb(onDataReceive);
-}
-
-void loop()
-{
-  // The loop function is empty because all the work is done in the onDataReceive callback
-  // This function is called automatically whenever data is received via ESP-NOW
 }
