@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
-#include "ServoControl.h"
+#include "../include/config/ServoControl.h"
 
 // Create servo objects
 Servo upperNeckServo;
