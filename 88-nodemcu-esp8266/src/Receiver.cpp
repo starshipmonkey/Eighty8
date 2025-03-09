@@ -1,10 +1,9 @@
-#include "Receiver.h"
-
 // Include necessary libraries
+#include <Arduino.h>     // Standard Arduino library
 #include <ESP8266WiFi.h> // Enables WiFi functionality for ESP8266
 #include <espnow.h>      // Enables ESP-NOW protocol for communication
 #include <vector>        // Allows use of dynamic arrays (vectors)
-#include <Arduino.h>
+#include "Target.h"      // Interface for target information
 
 // Define a structure to hold information about detected objects (faces or persons)
 struct DetectedObject
@@ -20,41 +19,85 @@ struct DetectedObject
 // Create two vectors (dynamic arrays) to store detected faces and persons
 std::vector<DetectedObject> detectedFaces;   // Will store all detected faces
 std::vector<DetectedObject> detectedPersons; // Will store all detected persons
+// Define the global current target as declared in Target.h
+Target currentTarget;
+// Initialize the target system
+void initializeTarget() {
+  clearTarget();
+}
 
-// Define a structure to hold information about the highest priority target
-struct Target
-{
-  String type; // Type of target: "face", "person", or "none"
-  int x;       // X-coordinate of the center of the target
-  int y;       // Y-coordinate of the center of the target
-};
+// Check if a valid target is available
+bool isTargetAvailable() {
+  return currentTarget.isValid;
+}
+
+// Clear the current target
+void clearTarget() {
+  currentTarget.isValid = false;
+  currentTarget.type = NONE;
+  currentTarget.centerX = 0;
+  currentTarget.centerY = 0;
+  currentTarget.x = 0;
+  currentTarget.y = 0;
+  currentTarget.width = 0;
+  currentTarget.height = 0;
+  currentTarget.confidence = 0;
+  currentTarget.size = 0;
+}
+
+// Helper function to print target information to Serial
+void printTargetInfo(const Target& target) {
+  Serial.println("Target Information:");
+  Serial.print("  Valid: "); Serial.println(target.isValid ? "Yes" : "No");
+  Serial.print("  Type: "); 
+  switch(target.type) {
+    case FACE: Serial.println("Face"); break;
+    case PERSON: Serial.println("Person"); break;
+    default: Serial.println("None"); break;
+  }
+  Serial.print("  Center: ("); Serial.print(target.centerX); Serial.print(", "); Serial.print(target.centerY); Serial.println(")");
+  Serial.print("  Bounding Box: X="); Serial.print(target.x); 
+  Serial.print(", Y="); Serial.print(target.y);
+  Serial.print(", W="); Serial.print(target.width);
+  Serial.print(", H="); Serial.println(target.height);
+  Serial.print("  Confidence: "); Serial.println(target.confidence);
+  Serial.print("  Size: "); Serial.println(target.size);
+}
 
 // Function to determine the highest priority target
-Target getHighestPriorityTarget(int scoreThreshold = 25)
+Target getHighestPriorityTarget(int scoreThreshold)
 {
   // Initialize target with default values
-  Target target = {"none", 0, 0}; // Default to no target
-
+  Target target;
+  target.isValid = false;
+  target.type = NONE;
+  
   // First, check if any faces were detected
   if (!detectedFaces.empty())
   {
     // Find the biggest face using std::max_element
-    // This function iterates through the vector and finds the maximum element
-    // based on the comparison function we provide (lambda function)
     auto biggestFace = std::max_element(detectedFaces.begin(), detectedFaces.end(),
-                                        [](const DetectedObject &a, const DetectedObject &b)
-                                        {
-                                          // Compare the areas of the faces
-                                          return (a.w * a.h) < (b.w * b.h);
-                                        });
+                                      [](const DetectedObject &a, const DetectedObject &b)
+                                      {
+                                        // Compare the areas of the faces
+                                        return (a.w * a.h) < (b.w * b.h);
+                                      });
 
     // Check if the biggest face meets the score threshold
     if (biggestFace->score >= scoreThreshold)
     {
-      target.type = "face";
+      target.isValid = true;
+      target.type = FACE;
+      // Store original bounding box
+      target.x = biggestFace->x;
+      target.y = biggestFace->y;
+      target.width = biggestFace->w;
+      target.height = biggestFace->h;
       // Calculate the center point of the face
-      target.x = biggestFace->x + (biggestFace->w / 2);
-      target.y = biggestFace->y + (biggestFace->h / 2);
+      target.centerX = biggestFace->x + (biggestFace->w / 2);
+      target.centerY = biggestFace->y + (biggestFace->h / 2);
+      target.confidence = biggestFace->score;
+      target.size = biggestFace->w * biggestFace->h;
       return target;
     }
   }
@@ -64,24 +107,37 @@ Target getHighestPriorityTarget(int scoreThreshold = 25)
   {
     // Find the person with the highest score
     auto highestScorePerson = std::max_element(detectedPersons.begin(), detectedPersons.end(),
-                                               [](const DetectedObject &a, const DetectedObject &b)
-                                               {
-                                                 // Compare the scores of the persons
-                                                 return a.score < b.score;
-                                               });
+                                             [](const DetectedObject &a, const DetectedObject &b)
+                                             {
+                                               // Compare the scores of the persons
+                                               return a.score < b.score;
+                                             });
 
     // Check if the highest scoring person meets the threshold
     if (highestScorePerson->score >= scoreThreshold)
     {
-      target.type = "person";
+      target.isValid = true;
+      target.type = PERSON;
+      // Store original bounding box
+      target.x = highestScorePerson->x;
+      target.y = highestScorePerson->y;
+      target.width = highestScorePerson->w;
+      target.height = highestScorePerson->h;
       // Calculate the center point of the person
-      target.x = highestScorePerson->x + (highestScorePerson->w / 2);
-      target.y = highestScorePerson->y + (highestScorePerson->h / 2);
+      target.centerX = highestScorePerson->x + (highestScorePerson->w / 2);
+      target.centerY = highestScorePerson->y + (highestScorePerson->h / 2);
+      target.confidence = highestScorePerson->score;
+      target.size = highestScorePerson->w * highestScorePerson->h;
     }
   }
 
-  // Return the target (will be "none" if no suitable target was found)
+  // Return the target (will have isValid = false if no suitable target was found)
   return target;
+}
+
+// Update the global currentTarget variable with the highest priority target
+void updateTargetFromReceiver() {
+  currentTarget = getHighestPriorityTarget();
 }
 
 // Function to parse a single detection from a string
@@ -175,23 +231,20 @@ void onDataReceive(uint8_t *mac, uint8_t *data, uint8_t len)
     Serial.printf("  ID: %d, Score: %d, X: %d, Y: %d, W: %d, H: %d\n",
                   person.id, person.score, person.x, person.y, person.w, person.h);
   }
-
-  // Get the highest priority target
-  Target highestPriorityTarget = getHighestPriorityTarget(25);
-
+  // Update the highest priority target
+  updateTargetFromReceiver();
+  
   // Print the highest priority target information
-  Serial.println("Highest Priority Target:");
-  Serial.printf("  Type: %s, X: %d, Y: %d\n",
-                highestPriorityTarget.type.c_str(),
-                highestPriorityTarget.x,
-                highestPriorityTarget.y);
+  printTargetInfo(currentTarget);
   Serial.println("--------------------");
 }
-
 void receiverSetup()
 {
   // Initialize Serial Monitor for debugging output
   Serial.begin(115200); // Set baud rate to 115200
+  
+  // Initialize target system
+  initializeTarget();
 
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);

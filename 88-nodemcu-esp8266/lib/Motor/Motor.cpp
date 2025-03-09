@@ -1,31 +1,25 @@
 #include <Arduino.h>
+#include "Motor.h"
 
-// This class is used the create a motor object. It can then be used to control the motor.
-
-class Motor
+// Constructor implementation
+Motor::Motor(int pwm, int dir) : pwm(pwm), dir(dir)
 {
-public:
-    Motor(int pwm, int dir) : pwm(pwm), dir(dir) // Constructor to initialize the motor object
+    pinMode(pwm, OUTPUT);
+    pinMode(dir, OUTPUT);
+}
+
+// Set speed implementation
+void Motor::setSpeed(int speed)
+{
+    if (speed > 1023)
     {
-        pinMode(pwm, OUTPUT);
-        pinMode(dir, OUTPUT);
+        speed = 1023;
     }
+    analogWrite(pwm, speed);
+}
 
-    void setSpeed(int speed)
-    {
-        if (speed > 1023)
-        {
-            speed = 1023;
-        }
-        analogWrite(pwm, speed);
-    }
-
-    void setDirection(int direction)
-    {
-        digitalWrite(dir, direction);
-    };
-
-private:
-    int pwm;
-    int dir;
-};
+// Set direction implementation
+void Motor::setDirection(int direction)
+{
+    digitalWrite(dir, direction);
+}
