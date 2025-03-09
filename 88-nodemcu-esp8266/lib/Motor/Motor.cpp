@@ -15,6 +15,10 @@ void Motor::setSpeed(int speed)
     {
         speed = 1023;
     }
+    else if (speed > 0 && speed < 700)
+    {
+        speed = 700;
+    }
     analogWrite(pwm, speed);
 }
 

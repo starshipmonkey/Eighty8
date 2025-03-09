@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "../../lib/Motor/Motor.h"
+#include "../Target.h"
 
 // Motor setup function - call this from setup()
 void motorSetup();
@@ -23,6 +24,9 @@ void gradualStop(int deceleration);
 bool isMoving();
 int getLeftMotorSpeed();
 int getRightMotorSpeed();
+
+// Target tracking function
+void turnTowardTarget(const Target& target, int speed);
 
 #endif // MOTORCONTROL_H
 
