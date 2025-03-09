@@ -137,7 +137,41 @@ Target getHighestPriorityTarget(int scoreThreshold)
 
 // Update the global currentTarget variable with the highest priority target
 void updateTargetFromReceiver() {
-  currentTarget = getHighestPriorityTarget();
+  // Default threshold value of 25, same as used elsewhere in the project
+  currentTarget = getHighestPriorityTarget(25);
+  
+  // Debug output for centerX calculation
+  if (currentTarget.isValid) {
+    Serial.println("Debug - centerX calculation:");
+    Serial.print("  Target type: ");
+    Serial.println(currentTarget.type == FACE ? "Face" : (currentTarget.type == PERSON ? "Person" : "Unknown"));
+    Serial.print("  Original X: ");
+    Serial.print(currentTarget.x);
+    Serial.print(", Width: ");
+    Serial.print(currentTarget.width);
+    Serial.print(", Raw centerX calculation: X + (Width/2) = ");
+    Serial.print(currentTarget.x);
+    Serial.print(" + (");
+    Serial.print(currentTarget.width);
+    Serial.print("/2) = ");
+    Serial.print(currentTarget.x + (currentTarget.width / 2));
+    Serial.print(", Actual centerX: ");
+    Serial.println(currentTarget.centerX);
+    
+    // Check if the centerX matches what we'd expect
+    int expectedCenterX = currentTarget.x + (currentTarget.width / 2);
+    if (currentTarget.centerX != expectedCenterX) {
+      Serial.print("  WARNING: centerX mismatch! Expected: ");
+      Serial.print(expectedCenterX);
+      Serial.print(", Actual: ");
+      Serial.println(currentTarget.centerX);
+      
+      // Fix the centerX if needed
+      currentTarget.centerX = expectedCenterX;
+      Serial.print("  Corrected centerX to: ");
+      Serial.println(currentTarget.centerX);
+    }
+  }
 }
 
 // Function to parse a single detection from a string

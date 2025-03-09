@@ -61,13 +61,43 @@ void moveBackward(int speed) {
 }
 
 void turnLeft(int speed) {
-    leftBackward(speed / 2);  // Slow down or stop the left motor
-    rightForward(speed);      // Keep the right motor moving forward
+    // Calculate the turn ratio to ensure minimum motor speed
+    const int MIN_MOTOR_SPEED = 700;
+    int slowMotorSpeed;
+    
+    if (speed == 0) {
+        slowMotorSpeed = 0; // If input speed is 0, slow motor should also be 0
+    } else if (speed < MIN_MOTOR_SPEED) {
+        slowMotorSpeed = MIN_MOTOR_SPEED; // If input speed is below minimum, use minimum
+    } else {
+        // Calculate the slow motor speed, ensuring it doesn't go below minimum
+        // For input speed of 1000, slower motor should be at least 700
+        float turnRatio = max(0.7f, (float)MIN_MOTOR_SPEED / speed);
+        slowMotorSpeed = (int)(speed * turnRatio);
+    }
+    
+    leftBackward(slowMotorSpeed);  // Set left motor to calculated speed
+    rightForward(speed);           // Keep the right motor at full speed
 }
 
 void turnRight(int speed) {
-    leftForward(speed);       // Keep the left motor moving forward
-    rightBackward(speed / 2); // Slow down or stop the right motor
+    // Calculate the turn ratio to ensure minimum motor speed
+    const int MIN_MOTOR_SPEED = 700;
+    int slowMotorSpeed;
+    
+    if (speed == 0) {
+        slowMotorSpeed = 0; // If input speed is 0, slow motor should also be 0
+    } else if (speed < MIN_MOTOR_SPEED) {
+        slowMotorSpeed = MIN_MOTOR_SPEED; // If input speed is below minimum, use minimum
+    } else {
+        // Calculate the slow motor speed, ensuring it doesn't go below minimum
+        // For input speed of 1000, slower motor should be at least 700
+        float turnRatio = max(0.7f, (float)MIN_MOTOR_SPEED / speed);
+        slowMotorSpeed = (int)(speed * turnRatio);
+    }
+    
+    leftForward(speed);            // Keep the left motor at full speed
+    rightBackward(slowMotorSpeed);  // Set right motor to calculated speed
 }
 
 void stopMotors() {
@@ -105,11 +135,23 @@ void gradualStop(int deceleration) {
     int leftSpeed = getLeftMotorSpeed();
     int rightSpeed = getRightMotorSpeed();
     
+    // Minimum motor speed threshold
+    const int MIN_MOTOR_SPEED = 700;
+    
     // Gradually reduce speed until both motors stop
     while (leftSpeed > 0 || rightSpeed > 0) {
         // Reduce speeds
         leftSpeed = max(0, leftSpeed - deceleration);
         rightSpeed = max(0, rightSpeed - deceleration);
+        
+        // If speed drops below minimum threshold but is not zero, set it to zero
+        if (leftSpeed > 0 && leftSpeed < MIN_MOTOR_SPEED) {
+            leftSpeed = 0;
+        }
+        
+        if (rightSpeed > 0 && rightSpeed < MIN_MOTOR_SPEED) {
+            rightSpeed = 0;
+        }
         
         // Apply new speeds
         leftMotor.setSpeed(leftSpeed);
@@ -138,4 +180,49 @@ int getLeftMotorSpeed() {
 int getRightMotorSpeed() {
     // Same as getLeftMotorSpeed, we need a proper implementation
     return 0; // Placeholder - would need proper implementation
+}
+
+/**
+ * Turn the robot toward a detected target
+ * 
+ * @param target The target to turn toward
+ * @param speed The speed at which to turn (0-255)
+ */
+void turnTowardTarget(const Target& target, int speed) {
+    // Check if the target is valid
+    if (!target.isValid) {
+        stopMotors();
+        return;
+    }
+
+    // Camera center X position
+    // Based on the actual target positions in the logs, the camera resolution appears to be different
+    // Target positions are consistently around 390-420, so adjusting center accordingly
+    const int CAMERA_CENTER_X = 400;
+    
+    // Deadzone to prevent constant small adjustments
+    const int DEADZONE = 20;
+    
+    // Calculate how far the target is from the center
+    int offsetFromCenter = target.centerX - CAMERA_CENTER_X;
+    
+    // If target is within the deadzone, stop turning
+    if (abs(offsetFromCenter) < DEADZONE) {
+        stopMotors();
+        return;
+    }
+    
+    // Adjust turning speed based on how far the target is from center
+    // The farther from center, the faster the turn (up to the maximum provided speed)
+    int adjustedSpeed = map(abs(offsetFromCenter), DEADZONE, CAMERA_CENTER_X, speed/3, speed);
+    adjustedSpeed = constrain(adjustedSpeed, 0, speed);
+    
+    // Turn the robot toward the target
+    if (offsetFromCenter < 0) {
+        // Target is to the left, rotate counterclockwise
+        rotateInPlace(adjustedSpeed, false);
+    } else {
+        // Target is to the right, rotate clockwise
+        rotateInPlace(adjustedSpeed, true);
+    }
 }

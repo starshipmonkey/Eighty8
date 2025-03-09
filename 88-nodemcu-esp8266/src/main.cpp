@@ -20,9 +20,9 @@ void setup()
     //  Initialize motors (if not already initialized)
     motorSetup();
 
-    // Start the motor test sequence
-    Serial.println("Starting motor tests...");
-    startMotorTest();
+    // Start the motor test sequence (commented out for target tracking)
+    Serial.println("Motor tests disabled. Using target tracking...");
+    // startMotorTest();
 
     // Print startup message
     Serial.println("\nEighty8 system initialized!");
@@ -49,38 +49,52 @@ void loop()
             // Print information about the current target
             printTargetInfo(currentTarget);
 
-            // Example of using target information for decision-making
+            // Use target information for motor control
             if (currentTarget.type == FACE)
             {
                 Serial.println("Action: Face detected - priority tracking");
 
-                // Example: You could use the target position to move servos
-                // For instance, if the face is on the left side of the frame
-                if (currentTarget.centerX < 120)
+                // Turn the robot toward the face
+                int trackingSpeed = 150; // Adjust speed as needed (0-255)
+                turnTowardTarget(currentTarget, trackingSpeed);
+
+                // Camera center and deadzone values (must match those in turnTowardTarget function)
+                const int CAMERA_CENTER_X = 160;
+                const int DEADZONE = 200;
+
+                // Calculate offset from center to determine turning direction
+                int offsetFromCenter = currentTarget.centerX - CAMERA_CENTER_X;
+
+                // Print the direction that matches the turnTowardTarget function's decision
+                if (abs(offsetFromCenter) < DEADZONE)
                 {
-                    Serial.println("Target is on the left side - adjust servos accordingly");
+                    Serial.println("Face is centered - stopping motors");
+                    // Note: stopMotors() is already called in turnTowardTarget when in deadzone
                 }
-                else if (currentTarget.centerX > 200)
+                else if (offsetFromCenter < 0)
                 {
-                    Serial.println("Target is on the right side - adjust servos accordingly");
+                    Serial.println("Turning left to track face");
                 }
                 else
                 {
-                    Serial.println("Target is centered - maintain position");
+                    Serial.println("Turning right to track face");
                 }
             }
             else if (currentTarget.type == PERSON)
             {
                 Serial.println("Action: Person detected - general tracking");
 
-                // Example: You could use the target confidence for decision-making
+                // Turn toward person with speed based on confidence
+                int trackingSpeed = map(currentTarget.confidence, 25, 100, 100, 200);
+                turnTowardTarget(currentTarget, trackingSpeed);
+
                 if (currentTarget.confidence > 75)
                 {
-                    Serial.println("High confidence detection - consider movement");
+                    Serial.println("High confidence detection - tracking at higher speed");
                 }
                 else
                 {
-                    Serial.println("Lower confidence detection - maintain position");
+                    Serial.println("Lower confidence detection - tracking at lower speed");
                 }
             }
         }
