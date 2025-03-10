@@ -1,0 +1,149 @@
+{
+  // File associations
+  "files.associations": {
+    "*.html": "jekyll",
+    "*.md": "jekyll-markdown",
+    "*.liquid": "liquid",
+    "_layouts/*.html": "jekyll",
+    "_includes/*.html": "jekyll",
+    "_pages/*.md": "jekyll-markdown"
+  },
+  
+  // Language settings
+  "emmet.includeLanguages": {
+    "jekyll": "html",
+    "jekyll-markdown": "html",
+    "liquid": "html",
+    "markdown": "html"
+  },
+  
+  // Editor settings
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.snippetSuggestions": "top",
+  
+  // Markdown settings
+  "markdown.extension.toc.updateOnSave": true,
+  "markdown.extension.preview.autoShowPreviewToSide": false,
+  "markdown.extension.orderedList.marker": "one",
+  
+  // Markdown All in One enhanced settings
+  "markdown.extension.toc.levels": "2..3",
+  "markdown.extension.toc.slugifyMode": "github",
+  "markdown.extension.syntax.decorations": true,
+  "markdown.extension.preview.autoShowPreviewToSide": false,
+  "markdown.extension.print.theme": "light",
+  "markdown.extension.print.validateUrls": true,
+  "markdown.extension.italic.indicator": "_",
+  "markdown.extension.tableFormatter.enabled": true,
+  
+  // Liquid settings
+  "liquid.format.enable": true,
+  
+  // Jekyll specific
+  "jekyll.enableTelemetry": false,
+  "jekyll-run.commandLineArguments": "--livereload",
+  
+  // Terminal settings for Jekyll
+  "terminal.integrated.env.windows": {
+    "JEKYLL_ENV": "development"
+  },
+  
+  // Intellisense settings
+  "editor.suggestSelection": "first",
+  "editor.acceptSuggestionOnEnter": "on",
+  
+  // Path intellisense for includes and layouts
+  "path-intellisense.mappings": {
+    "/": "${workspaceFolder}",
+    "~/": "${workspaceFolder}"
+  },
+  
+  // Spell checker settings
+  "cSpell.enabled": true,
+  "cSpell.words": [
+    "jekyll",
+    "frontmatter",
+    "kramdown",
+    "livereload",
+    "minima",
+    "minima",
+    "webrick"
+  ],
+
+  // Front Matter settings
+  "frontMatter.framework.id": "jekyll",
+  "frontMatter.content.publicFolder": "docs",
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "Blog Posts",
+      "path": "[[workspace]]/docs/_posts"
+    },
+    {
+      "title": "Pages",
+      "path": "[[workspace]]/docs"
+    }
+  ],
+  "frontMatter.taxonomy.tags": [
+    "robotics",
+    "programming",
+    "hardware",
+    "software",
+    "updates",
+    "documentation"
+  ],
+  "frontMatter.taxonomy.categories": [
+    "Updates",
+    "Tutorials",
+    "Documentation",
+    "Project"
+  ],
+  "frontMatter.content.defaultFileType": "md",
+  "frontMatter.preview.host": "http://localhost:4000",
+  "frontMatter.content.snippets": {
+    "Jekyll Post": {
+      "description": "Standard Jekyll blog post",
+      "body": [
+        "---",
+        "layout: post",
+        "title: $1",
+        "date: {{now}}",
+        "categories: [$2]",
+        "tags: [$3]",
+        "---",
+        "",
+        "$0"
+      ],
+      "fields": [
+        {
+          "name": "layout",
+          "type": "choice",
+          "default": "post",
+          "choices": ["post", "page"]
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "type": "datetime"
+        },
+        {
+          "name": "categories",
+          "type": "array"
+        },
+        {
+          "name": "tags",
+          "type": "array"
+        }
+      ]
+    }
+  }
+
