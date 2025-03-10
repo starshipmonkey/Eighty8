@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    {% if site.google_analytics %}
+    {% include google-analytics.html %}
+    {% endif %}
+    {% seo %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="{{ '/' | relative_url }}">
+                        <h1 class="site-title">{{ site.title }}</h1>
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <button class="menu-toggle" aria-label="Toggle Menu">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                    <ul class="nav-links">
+                        <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Home</a></li>
+                        <li><a href="{{ '/about/' | relative_url }}" {% if page.url contains '/about/' %}class="active"{% endif %}>About</a></li>
+                        <li><a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog/' %}class="active"{% endif %}>Blog</a></li>
+                        <li><a href="{{ '/documentation/' | relative_url }}" {% if page.url contains '/documentation/' %}class="active"{% endif %}>Documentation</a></li>
+                        <li><a href="{{ '/gallery/' | relative_url }}" {% if page.url contains '/gallery/' %}class="active"{% endif %}>Gallery</a></li>
+                        <li><a href="https://github.com/starshipmonkey/Eighty8" target="_blank" rel="noopener">GitHub <i class="fab fa-github"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-content">
+        <div class="container">
+            {{ content }}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About Eighty8</h3>
+                    <p>{{ site.description }}</p>
+                    <div class="social-links">
+                        <a href="https://github.com/starshipmonkey/Eighty8" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+                        {% if site.twitter_username %}
+                        <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if site.youtube_channel %}
+                        <a href="https://youtube.com/{{ site.youtube_channel }}" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+                        <li><a href="{{ '/blog/' | relative_url }}">Blog</a></li>
+                        <li><a href="{{ '/documentation/' | relative_url }}">Documentation</a></li>
+                        <li><a href="{{ '/gallery/' | relative_url }}">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact</h3>
+                    <p>Have questions or want to contribute?</p>
+                    <p><a href="https://github.com/starshipmonkey/Eighty8/issues" target="_blank" rel="noopener">Open an issue</a> or <a href="https://github.com/starshipmonkey/Eighty8/pulls" target="_blank" rel="noopener">submit a pull request</a>.</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+                <p>Powered by <a href="https://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> and <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('show');
+                menuToggle.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
+

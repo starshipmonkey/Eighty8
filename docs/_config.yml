@@ -1,0 +1,73 @@
+# _config.yml for Eighty8 Robotics Project
+# This is the main configuration file for your Jekyll site
+
+# Site settings
+# These are used to personalize your site
+title: "Eighty8 Robotics Project"
+description: >- 
+  A robotics project focused on developing innovative solutions 
+  with open-source hardware and software components.
+author: "Eighty8 Team"
+
+# Build settings
+# Theme - using minima, a default GitHub Pages theme
+theme: minima
+
+# URLs and paths
+# baseurl is the subpath, url is the full domain
+baseurl: "/Eighty8" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol, e.g. http://example.com
+permalink: /:year/:month/:day/:title/
+
+# Social media and contact
+# Add your social media accounts or contact info
+github_username: starshipmonkey
+# twitter_username: yourusername
+# email: your-email@example.com
+
+# Collections
+# Define custom content types beyond posts and pages
+collections:
+  projects:
+    output: true
+    permalink: /projects/:path/
+
+# Default front matter settings
+# These are the default values for front matter of pages and posts
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# Pagination for blog posts
+paginate: 5
+paginate_path: "/blog/page:num/"
+
+# Exclude files from being included in the site
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - README.md
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+
+# Markdown settings
+markdown: kramdown
+highlighter: rouge
+
