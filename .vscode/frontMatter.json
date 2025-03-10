@@ -1,0 +1,132 @@
+{
+  "frontMatter.framework.id": "jekyll",
+  "frontMatter.content.publicFolder": "docs",
+  "frontMatter.preview.host": "http://localhost:4000",
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "blog posts",
+      "path": "[[workspace]]/docs/_posts"
+    },
+    {
+      "title": "pages",
+      "path": "[[workspace]]/docs"
+    }
+  ],
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "post",
+      "pageBundle": false,
+      "previewPath": "/blog/{slug}",
+      "filePrefix": null,
+      "fileType": "md",
+      "fields": [
+        {
+          "title": "Title",
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "title": "Publishing date",
+          "name": "date",
+          "type": "datetime",
+          "default": "{{now}}",
+          "required": true
+        },
+        {
+          "title": "Author",
+          "name": "author",
+          "type": "string",
+          "default": "Team Eighty8"
+        },
+        {
+          "title": "Categories",
+          "name": "categories",
+          "type": "categories",
+          "required": true
+        },
+        {
+          "title": "Tags",
+          "name": "tags",
+          "type": "tags"
+        },
+        {
+          "title": "Featured Image",
+          "name": "image",
+          "type": "image",
+          "isPreviewImage": true
+        },
+        {
+          "title": "Draft",
+          "name": "draft",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "title": "Layout",
+          "name": "layout",
+          "type": "string",
+          "default": "post"
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "pageBundle": false,
+      "fileType": "md",
+      "fields": [
+        {
+          "title": "Title",
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "title": "Permalink",
+          "name": "permalink",
+          "type": "string"
+        },
+        {
+          "title": "Layout",
+          "name": "layout",
+          "type": "string",
+          "default": "default"
+        }
+      ]
+    }
+  ],
+  "frontMatter.taxonomy.categories": [
+    "updates",
+    "development",
+    "features",
+    "robotics",
+    "hardware",
+    "software",
+    "announcement"
+  ],
+  "frontMatter.taxonomy.tags": [
+    "progress",
+    "milestone",
+    "prototype",
+    "design",
+    "electronics",
+    "mechanical",
+    "sensors",
+    "motors",
+    "control",
+    "code",
+    "documentation",
+    "testing"
+  ]
+}
+

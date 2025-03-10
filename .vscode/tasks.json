@@ -1,0 +1,137 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Jekyll: Serve",
+            "type": "shell",
+            "command": "bundle exec jekyll serve --livereload",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "jekyll",
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^Configuration file:",
+                    "endsPattern": "^Server running... press ctrl-c to stop.$"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        },
+        {
+            "label": "Jekyll: Build",
+            "type": "shell",
+            "command": "bundle exec jekyll build",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        },
+        {
+            "label": "Jekyll: Clean",
+            "type": "shell",
+            "command": "bundle exec jekyll clean",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        },
+        {
+            "label": "Jekyll: Build with drafts",
+            "type": "shell",
+            "command": "bundle exec jekyll build --drafts",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        },
+        {
+            "label": "Jekyll: Serve with drafts",
+            "type": "shell",
+            "command": "bundle exec jekyll serve --drafts --livereload",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "jekyll",
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^Configuration file:",
+                    "endsPattern": "^Server running... press ctrl-c to stop.$"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        },
+        {
+            "label": "Jekyll: New post",
+            "type": "shell",
+            "command": "New-Item -Path \"_posts/$(Get-Date -Format 'yyyy-MM-dd')-new-post.md\" -ItemType File -Force",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        },
+        {
+            "label": "Jekyll: New draft",
+            "type": "shell",
+            "command": "if (-not (Test-Path -Path \"_drafts\")) { New-Item -Path \"_drafts\" -ItemType Directory -Force }; New-Item -Path \"_drafts/new-draft.md\" -ItemType File -Force",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/docs"
+            }
+        }
+    ]
+}
+
