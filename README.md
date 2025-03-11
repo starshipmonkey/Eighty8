@@ -1,6 +1,6 @@
 # Project Eighty8
 
-Read the latest blog post here: https://github.com/starshipmonkey/Eighty8/blob/main/88-Update-Blog/2025-03-10.md
+Read the latest blog post here: https://github.com/starshipmonkey/Eighty8/blob/main/88-Update-Blog/2025-03-12.md
 
 ## Overview
 Project Eighty8 is an experimental robot designed for novel interaction, entertainment, and companionship. The robot autonomously detects and tracks human faces and bodies, physically moving to maintain "attention" on people in its environment.
