@@ -21,10 +21,10 @@ Project Eighty8 utilizes a two-device system:
   - Runs machine learning models to detect faces and people
   - Processes video feed in real-time
   - Calculates target position, size, and confidence values
-  - Transmits detection data to the motor control system
+  - Transmits detection data to the main processor
 
-### 2. Motor Control System (NodeMCU ESP8266)
-- **Hardware**: ESP8266 microcontroller + DC motors + Servo motors
+### 2. Main Processor (Adafruit HUZZAH32 - ESP32 Feather)
+- **Hardware**: Adafruit HUZZAH32 - ESP32 Feather + DC motors + Servo motors
 - **Function**:
   - Receives target data via ESP-NOW wireless protocol
   - Prioritizes and selects targets based on type and proximity
@@ -59,7 +59,7 @@ The robot features:
 3. This data is formatted and transmitted via ESP-NOW wireless protocol to the NodeMCU
 
 ### Target Selection
-1. The NodeMCU receives detection data from the ESP32C3
+1. The ESP32 receives detection data from the ESP32C3
 2. Targets are categorized as either FACE or PERSON
 3. The system prioritizes:
    - Faces over people
@@ -82,8 +82,21 @@ The robot features:
 
 ## Project Components
 - Grove Vision AI V2 (Camera with embedded ML processing)
-- Xiao ESP32C3 (Vision processing controller)
-- Node MCU ESP8266 12E (Motor control system)
+- Xiao ESP32C3 (Vision processing controller) 
+- Adafruit HUZZAH32 - ESP32 Feather (Main processor) with custom breadboard breakout
+-   https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts
+- TCA9548A IIC Multiplex
+-   https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout/overview
+- MPU-6050 3 Axis Gyroscope + Accelerometer
+-   https://www.instructables.com/MPU-6050-Tutorial-How-to-Program-MPU-6050-With-Ard/
+- HMC5883L Triple Axis Compass Magnetometer
+-   http://wiki.sunfounder.cc/index.php?title=HMC5883L
+- VL53L0X - Time-of-Flight (ToF) ranging sensor
+-   https://docs.sunfounder.com/projects/umsk/en/latest/02_arduino/uno_lesson21_vl53l0x.html
+- Dual H-Bridge Motor Driver L298N
 - DC Motors (Differential steering)
+- PCA9685 Servomotor Driver
+-   https://circuitdigest.com/microcontroller-projects/pca9685-multiple-servo-control-using-arduino
 - Servo Motors (2-joint vertical neck control)
+- 2S Lithium battery, DC-DC Converter, and custom breadboard 5v/3.3v/G rail.
 
