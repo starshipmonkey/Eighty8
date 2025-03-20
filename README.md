@@ -84,19 +84,19 @@ The robot features:
 - Grove Vision AI V2 (Camera with embedded ML processing)
 - Xiao ESP32C3 (Vision processing controller) 
 - Adafruit HUZZAH32 - ESP32 Feather (Main processor) with custom breadboard breakout
--   https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts
+  - https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts
 - TCA9548A IIC Multiplex
--   https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout/overview
+  - https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout/overview
 - MPU-6050 3 Axis Gyroscope + Accelerometer
--   https://www.instructables.com/MPU-6050-Tutorial-How-to-Program-MPU-6050-With-Ard/
+  - https://www.instructables.com/MPU-6050-Tutorial-How-to-Program-MPU-6050-With-Ard/
 - HMC5883L Triple Axis Compass Magnetometer
--   http://wiki.sunfounder.cc/index.php?title=HMC5883L
+  - http://wiki.sunfounder.cc/index.php?title=HMC5883L
 - VL53L0X - Time-of-Flight (ToF) ranging sensor
--   https://docs.sunfounder.com/projects/umsk/en/latest/02_arduino/uno_lesson21_vl53l0x.html
+  - https://docs.sunfounder.com/projects/umsk/en/latest/02_arduino/uno_lesson21_vl53l0x.html
 - Dual H-Bridge Motor Driver L298N
 - DC Motors (Differential steering)
 - PCA9685 Servomotor Driver
--   https://circuitdigest.com/microcontroller-projects/pca9685-multiple-servo-control-using-arduino
+  - https://circuitdigest.com/microcontroller-projects/pca9685-multiple-servo-control-using-arduino
 - Servo Motors (2-joint vertical neck control)
 - 2S Lithium battery, DC-DC Converter, and custom breadboard 5v/3.3v/G rail.
 
