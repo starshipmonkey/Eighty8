@@ -16,17 +16,16 @@ This project explores human-machine interaction by creating a device that:
 Project Eighty8 utilizes a two-device system:
 
 ### 1. Vision Processing System (Xiao ESP32C3)
-- **Hardware**: ESP32C3 microcontroller + Grove Vision AI V2 camera
+- **Hardware**: Grove Vision AI V2 camera
 - **Function**: 
   - Runs machine learning models to detect faces and people
   - Processes video feed in real-time
   - Calculates target position, size, and confidence values
-  - Transmits detection data to the main processor
 
 ### 2. Main Processor (Adafruit HUZZAH32 - ESP32 Feather)
 - **Hardware**: Adafruit HUZZAH32 - ESP32 Feather + DC motors + Servo motors
 - **Function**:
-  - Receives target data via ESP-NOW wireless protocol
+  - Receives target data via I2C
   - Prioritizes and selects targets based on type and proximity
   - Controls differential steering for horizontal tracking
   - Manages servo motors for vertical neck movement
@@ -55,11 +54,10 @@ The robot features:
 
 ### Vision Detection
 1. The Grove Vision AI module continuously processes camera images using embedded machine learning
-2. When faces or people are detected, their positions and dimensions are calculated
-3. This data is formatted and transmitted via ESP-NOW wireless protocol to the NodeMCU
+2. When faces or people are detected, their positions and dimensions are calculated and sent to the ESP32 over IC2
 
 ### Target Selection
-1. The ESP32 receives detection data from the ESP32C3
+1. The ESP32 receives detection data from the Grove Vision AI V2
 2. Targets are categorized as either FACE or PERSON
 3. The system prioritizes:
    - Faces over people
@@ -74,15 +72,15 @@ The robot features:
 
 ## Technical Implementation
 
-- **ESP-NOW Communication**: Provides low-latency wireless communication between the two microcontrollers
+- **The ESP32 is programmed in VS Code using Platform IO with OTA updates, and telnet serial monitoring.
 - **Real-time Vision Processing**: Uses Seeed's SSCMA library for efficient on-device machine learning
 - **Differential Steering**: Controls robot rotation by varying relative motor speeds
 - **Servo Control**: Provides precise positioning of the 2-joint neck for vertical tracking
 - **Target Management**: Implements sophisticated algorithms to select and track the most relevant target
+- Sensor fusion is used for navigation and obstical avoidence
 
 ## Project Components
 - Grove Vision AI V2 (Camera with embedded ML processing)
-- Xiao ESP32C3 (Vision processing controller) 
 - Adafruit HUZZAH32 - ESP32 Feather (Main processor) with custom breadboard breakout
   - https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts
 - TCA9548A IIC Multiplex
