@@ -15,20 +15,22 @@ This project explores human-machine interaction by creating a device that:
 ## System Architecture
 Project Eighty8 utilizes a two-device system:
 
-### 1. Vision Processing System (Xiao ESP32C3)
+### 1. Vision Processing System (Grove Vision AI V2 camera)
 - **Hardware**: Grove Vision AI V2 camera
 - **Function**: 
-  - Runs machine learning models to detect faces and people
+  - Runs machine learning models to detect faces and people (detectnet)
   - Processes video feed in real-time
   - Calculates target position, size, and confidence values
 
 ### 2. Main Processor (Adafruit HUZZAH32 - ESP32 Feather)
 - **Hardware**: Adafruit HUZZAH32 - ESP32 Feather + DC motors + Servo motors
 - **Function**:
-  - Receives target data via I2C
+  - Receives target data from grove via I2C
   - Prioritizes and selects targets based on type and proximity
   - Controls differential steering for horizontal tracking
   - Manages servo motors for vertical neck movement
+  - Performs probabalistic mapping
+  - Reads and fuses sensor information
 
 ## Physical Design
 
