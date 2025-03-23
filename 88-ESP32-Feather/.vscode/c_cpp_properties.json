@@ -8,8 +8,9 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "H:/Projects/Eighty8/include",
-                "H:/Projects/Eighty8/src",
+                "E:/My Drive/Starship Monkey/Eighty8/88-ESP32-Feather/include",
+                "E:/My Drive/Starship Monkey/Eighty8/88-ESP32-Feather/src",
+                "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/ArduinoOTA/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/ESPmDNS/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
@@ -209,7 +210,7 @@
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/fb_gfx/include",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/cores/esp32",
-                "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/variants/feather_esp32",
+                "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/variants/esp32",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/AsyncUDP/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src",
@@ -238,14 +239,14 @@
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "H:/Projects/Eighty8/include",
-                    "H:/Projects/Eighty8/src",
+                    "E:/My Drive/Starship Monkey/Eighty8/88-ESP32-Feather/include",
+                    "E:/My Drive/Starship Monkey/Eighty8/88-ESP32-Feather/src",
+                    "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/ArduinoOTA/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/ESPmDNS/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
@@ -445,7 +446,7 @@
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/fb_gfx/include",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/cores/esp32",
-                    "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/variants/feather_esp32",
+                    "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/variants/esp32",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/AsyncUDP/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src",
@@ -474,13 +475,12 @@
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                    "C:/Users/alaric/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     ""
                 ]
             },
             "defines": [
                 "PLATFORMIO=60118",
-                "ARDUINO_FEATHER_ESP32",
+                "ARDUINO_ESP32_DEV",
                 "HAVE_CONFIG_H",
                 "MBEDTLS_CONFIG_FILE=\"mbedtls/esp_config.h\"",
                 "UNITY_INCLUDE_CONFIG_H",
@@ -493,8 +493,8 @@
                 "ESP32",
                 "F_CPU=240000000L",
                 "ARDUINO=10812",
-                "ARDUINO_VARIANT=\"feather_esp32\"",
-                "ARDUINO_BOARD=\"Adafruit ESP32 Feather\"",
+                "ARDUINO_VARIANT=\"esp32\"",
+                "ARDUINO_BOARD=\"Espressif ESP32 Dev Module\"",
                 "ARDUINO_PARTITION_default",
                 ""
             ],

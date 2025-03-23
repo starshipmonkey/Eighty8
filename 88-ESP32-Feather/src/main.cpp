@@ -1,79 +1,69 @@
 #include <Arduino.h>
-#include <WiFi.h>
-#include <ESPmDNS.h>
-#include <WiFiUdp.h>
-#include <ArduinoOTA.h>
-
-// Replace with your network credentials
-const char* ssid = "MyRepublic 71FD";
-const char* password = "a9428b3w7b";
-
-// LED Pin - most ESP32 boards have a built-in LED
-const int ledPin = LED_BUILTIN;  // Built-in LED pin
-bool ledState = false;
+#include "config/constants.h"
+#include "config/pins.h"
+#include "diagnostics/logging_macros.h"
+#include "diagnostics/error_handler.h"
+#include "diagnostics/system_monitor.h"
+#include "communication/wifi_ota.h"
+#include "communication/i2c_manager.h"
 
 void setup() {
-    Serial.begin(115200);
-    Serial.println("Booting");
+    // Initialize logging system
+    Logger::begin(115200);
+    LOG_INFO("Initializing system...");
     
-    // Initialize LED pin
-    pinMode(ledPin, OUTPUT);
-    
-    // Connect to WiFi
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    
-    while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-        Serial.println("Connection Failed! Rebooting...");
-        delay(5000);
-        ESP.restart();
+    // Initialize error handling
+    ErrorHandler::init();
+    if (!ErrorHandler::hasActiveError()) {
+        LOG_INFO("Error handling system initialized");
+    } else {
+        LOG_ERROR("Failed to initialize error handling system!");
+        return;
     }
-
-    // Configure OTA
-    ArduinoOTA.onStart([]() {
-        String type;
-        if (ArduinoOTA.getCommand() == U_FLASH) {
-            type = "sketch";
-        } else {
-            type = "filesystem";
-        }
-        Serial.println("Start updating " + type);
-    });
     
-    ArduinoOTA.onEnd([]() {
-        Serial.println("\nEnd");
-    });
+    // Initialize system monitoring
+    SystemMonitor::init();
+    LOG_INFO("System monitoring initialized");
     
-    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-    });
+    // Initialize WiFi and OTA
+    if (!WifiOta::init()) {
+        LOG_ERROR("Failed to initialize WiFi!");
+        ErrorHandler::handleError(ErrorCode::WIFI_DISCONNECTED, "WiFi initialization failed");
+        return;
+    }
+    LOG_INFO("WiFi initialized, IP: " + WifiOta::getIPAddress().toString());
     
-    ArduinoOTA.onError([](ota_error_t error) {
-        Serial.printf("Error[%u]: ", error);
-        if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-        else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-        else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-        else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-        else if (error == OTA_END_ERROR) Serial.println("End Failed");
-    });
-
-    ArduinoOTA.begin();
-
-    Serial.println("Ready");
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
+    // Initialize I2C communication
+    if (!I2CManager::init()) {
+        LOG_ERROR("Failed to initialize I2C communication!");
+        ErrorHandler::handleError(ErrorCode::I2C_DEVICE_FAILURE, "I2C initialization failed");
+        return;
+    }
+    LOG_INFO("I2C communication initialized");
+    
+    LOG_INFO("System initialization complete!");
 }
 
 void loop() {
-    ArduinoOTA.handle();
+    // Handle OTA updates
+    WifiOta::handleOtaUpdates();
     
-    // Toggle LED state every 2 seconds
-    ledState = !ledState;
-    digitalWrite(ledPin, ledState);
+    // Update system monitoring
+    SystemMonitor::update();
     
-    // Print LED state to Serial
-    Serial.print("LED is: ");
-    Serial.println(ledState ? "ON" : "OFF");
+    // Check system health
+    checkSystemHealth();
     
-    delay(2000);  // Changed from 1000 to 2000 for slower blinking
+    // Main loop delay
+    delay(10);
 }
+
+void checkSystemHealth() {
+    static unsigned long lastHealthCheck = 0;
+    const unsigned long healthCheckInterval = 1000; // Check every second
+    
+    if (millis() - lastHealthCheck >= healthCheckInterval) {
+        lastHealthCheck = millis();
+        
+        // Check WiFi connectivity
+        if (!WifiOta::
