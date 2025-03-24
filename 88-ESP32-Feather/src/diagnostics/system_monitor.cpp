@@ -11,7 +11,8 @@ float SystemMonitor::_temperature = 0.0f;
 uint32_t SystemMonitor::_freeHeap = 0;
 int8_t SystemMonitor::_wifiSignal = 0;
 bool SystemMonitor::_devicesOk = false;
-
+StatusChangeCallback SystemMonitor::_statusCallback = nullptr;
+bool SystemMonitor::_componentStatus[static_cast<int>(SystemComponent::TEMPERATURE) + 1] = {true};
 void SystemMonitor::init() {
     _lastMemoryCheck = millis();
     _lastTemperatureCheck = millis();
@@ -29,19 +30,19 @@ void SystemMonitor::update() {
     unsigned long currentTime = millis();
     
     // Check memory periodically
-    if (currentTime - _lastMemoryCheck >= MEMORY_CHECK_INTERVAL) {
+    if (currentTime - _lastMemoryCheck >= HEAP_CHECK_INTERVAL) {
         checkMemory();
         _lastMemoryCheck = currentTime;
     }
     
     // Check temperature periodically
-    if (currentTime - _lastTemperatureCheck >= TEMP_CHECK_INTERVAL) {
+    if (currentTime - _lastTemperatureCheck >= TEMPERATURE_CHECK_INTERVAL) {
         checkTemperature();
         _lastTemperatureCheck = currentTime;
     }
     
     // Check WiFi periodically
-    if (currentTime - _lastWifiCheck >= WIFI_CHECK_INTERVAL) {
+    if (currentTime - _lastWifiCheck >= WIFI_STRENGTH_CHECK_INTERVAL) {
         checkWifi();
         _lastWifiCheck = currentTime;
     }
@@ -74,6 +75,7 @@ void SystemMonitor::checkMemory() {
     
     if (_freeHeap < LOW_MEMORY_THRESHOLD) {
         LOG_WARN("Low memory warning: " + String(_freeHeap) + " bytes remaining");
+        SystemMonitor::setComponentStatus(SystemComponent::MEMORY, false);
     }
 }
 
@@ -83,6 +85,7 @@ void SystemMonitor::checkTemperature() {
     
     if (_temperature > HIGH_TEMP_THRESHOLD) {
         LOG_WARN("High temperature warning: " + String(_temperature) + "°C");
+        SystemMonitor::setComponentStatus(SystemComponent::TEMPERATURE, false);
     }
 }
 
@@ -90,6 +93,7 @@ void SystemMonitor::checkWifi() {
     if (!WifiOta::isConnected()) {
         _wifiSignal = -100; // Very weak signal value
         LOG_WARN("WiFi is disconnected");
+        SystemMonitor::setComponentStatus(SystemComponent::WIFI, false);
         return;
     }
     
@@ -97,6 +101,7 @@ void SystemMonitor::checkWifi() {
     
     if (_wifiSignal < WEAK_WIFI_THRESHOLD) {
         LOG_WARN("Weak WiFi signal: " + String(_wifiSignal) + " dBm");
+        SystemMonitor::setComponentStatus(SystemComponent::WIFI, false);
     }
 }
 
@@ -106,19 +111,33 @@ void SystemMonitor::checkI2CDevices() {
     if (!_devicesOk) {
         LOG_WARN("One or more I2C devices are not responding");
         I2CManager::reportDeviceStatus();
+        SystemMonitor::setComponentStatus(SystemComponent::I2C, false);
     }
 }
 
-#include "system_monitor.h"
-#include "../config/constants.h"
-#include <Arduino.h>
+void SystemMonitor::registerStatusChangeCallback(StatusChangeCallback callback) {
+    _statusCallback = callback;
+}
 
-void monitorSystem() {
-    static unsigned long lastSampleTime = 0;
-    unsigned long currentTime = millis();
-    if (currentTime - lastSampleTime >= SAMPLE_RATE) {
-        lastSampleTime = currentTime;
-        // Code for monitoring system metrics
+void SystemMonitor::setComponentStatus(SystemComponent component, bool isOperational) {
+    int componentIndex = static_cast<int>(component);
+    if (componentIndex < 0 || componentIndex >= sizeof(_componentStatus)/sizeof(_componentStatus[0])) {
+        return;
     }
+    
+    if (_componentStatus[componentIndex] != isOperational) {
+        _componentStatus[componentIndex] = isOperational;
+        if (_statusCallback) {
+            _statusCallback(component, isOperational);
+        }
+    }
+}
+
+bool SystemMonitor::getComponentStatus(SystemComponent component) {
+    int componentIndex = static_cast<int>(component);
+    if (componentIndex < 0 || componentIndex >= sizeof(_componentStatus)/sizeof(_componentStatus[0])) {
+        return false;
+    }
+    return _componentStatus[componentIndex];
 }
 

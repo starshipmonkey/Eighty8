@@ -32,3 +32,5 @@ src/wifi_config.h
 # OS specific
 .DS_Store
 Thumbs.db
+88-ESP32-Feather/src/config/secrets.h
+88-ESP32-Feather/platformio.ini
