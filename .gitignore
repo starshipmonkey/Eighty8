@@ -25,6 +25,8 @@ release/
 
 # Sensitive Configuration
 src/wifi_config.h
+secrets.h
+platformio.ini
 
 # Cache files
 .cache/
